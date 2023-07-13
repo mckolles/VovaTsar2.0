@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "root",
+    "password": "Koleso98",
+    "database": "competitors",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "root",
+    "password": "Koleso98",
+    "database": "competitors",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "Koleso98",
+    "database": "competitors",
+    "host": "localhost",
+    "dialect": "mysql"
+  }
+}
