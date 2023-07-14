@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 
@@ -8,13 +7,6 @@ body{
     background-color:#eeebff;
   }
     
-=======
-.App{
-    padding:50px;
-    
-    
-}
->>>>>>> f7942eb4a472872415813741607a2b1352ad6e47
 .competitors_table{
     color: black;
         margin: 20px auto; /* Отступы по вертикали 20px, выравнивание по центру */
@@ -28,7 +20,6 @@ body{
       
       th, td {
         padding: 10px; /* Отступы внутри ячеек */
-<<<<<<< HEAD
         border-bottom: 1px solid #000000; /* Разделительная полоса снизу */
       }
       h1{
@@ -83,12 +74,3 @@ body{
   flex: 1;
   padding: 10px;
 }
-=======
-        border-bottom: 1px solid #ccc; /* Разделительная полоса снизу */
-      }
-      h1{
-        color:rgba(75, 10, 53, 0.514);
-        margin-bottom: 50px;
-}
-
->>>>>>> f7942eb4a472872415813741607a2b1352ad6e47

@@ -1,11 +1,6 @@
 const express = require('express');
-<<<<<<< HEAD
 const apiRoutes=require('./routes/routes.js')
 const {Sequelize, conectToDb}=require('./sequelize/db.js')
-=======
-const apiRoutes=require('./routes.js')
-const {Sequelize, conectToDb}=require('./db.js')
->>>>>>> f7942eb4a472872415813741607a2b1352ad6e47
 const cors = require('cors');
 
 
