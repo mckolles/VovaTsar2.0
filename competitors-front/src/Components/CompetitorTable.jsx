@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import AddData from './AddData';
 
 const CompetitorTable = () => {
   const [competitors, setCompetitors] = useState([]);
@@ -14,10 +15,11 @@ const CompetitorTable = () => {
       .then((data) => setCompetitorsFiles(data))
       .catch((error) => console.error(error));
     
-  }, []);
+  }, [competitors, competitorsFiles]);
 
   return (
-    
+    <>
+    <AddData  />
     <table>
       <thead>
         <tr>
@@ -45,7 +47,9 @@ const CompetitorTable = () => {
   })}
       </tbody>
     </table>
+    </>
   );
 };
 
 export default CompetitorTable;
+
