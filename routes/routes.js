@@ -5,7 +5,6 @@ const upload=require('../middleware/upload')
 const path=require('path')
 
 
-
 const router=express.Router()
 router.use(express.json());
 
@@ -45,7 +44,7 @@ router.post('/upload', upload.single('image'), (req, res) => {
         name: competitorsName,
         created_at: new Date(),
       });
-      // Запись успешно добавлена
+     
       console.log('Запись успешно добавлена');
       return res.status(200).json({ message: 'Запись успешно добавлена' });
     }  
@@ -55,10 +54,10 @@ router.post('/upload', upload.single('image'), (req, res) => {
   router.post('/add-competitors-file', async (req, res) => {
     const { imagePath, competitorsId } = req.body;
     try {
-      // Создание новой записи в таблице competitors_files
+      
       const competitorFile = await CompetitorFiles.create({
-        image: imagePath, // Замените на imagePath
-        competitors_id: competitorsId, // Замените на competitorsId
+        image: imagePath,
+        competitors_id: competitorsId, 
         created_at: new Date()
       });
   

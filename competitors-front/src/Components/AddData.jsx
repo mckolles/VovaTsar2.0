@@ -4,7 +4,7 @@ import moment from 'moment';
 
 
 
-const AddData = (props) => {
+const AddData = ({fetchTablesData}) => {
   const fileInputRef = useRef(null);
   const [imagePath, setImagePath] = useState("");
   const [competitorsId, setСompetitorsId] = useState("");
@@ -32,9 +32,8 @@ const AddData = (props) => {
   const uploadFile = (file) => {
     const formData = new FormData();
     formData.append("image", file);
-    const date=moment().format('DDMMYYYY-HHmm')
-    const imagePath = `http://localhost:4000/images/${date}-${file.name}`;
-    setImagePath(imagePath);
+    const date=moment().format('DDMMYYYY-HHmmssSSS')
+    setImagePath(`http://localhost:4000/images/${date}-${file.name}`);
    
    
     fetch("http://localhost:4000/upload", {
@@ -44,6 +43,7 @@ const AddData = (props) => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Файл успешно загружен:", data);
+        fileInputRef.current.value = ""
         
       })
       .catch((error) => {
@@ -65,6 +65,7 @@ const AddData = (props) => {
         setImagePath("");
         setСompetitorsId("");
         setcompetitorsName("");
+        fetchTablesData()
       })
       .catch((error) => {
         console.error("Ошибка при добавлении записи в таблицу competitors:", error);
@@ -90,10 +91,6 @@ const AddData = (props) => {
         console.error("Ошибка при добавлении записи в таблицу competitors_files:", error);
       });
   };
-
-
-
-
 
   return (
     <div className={styles.form_row}>
@@ -131,5 +128,3 @@ const AddData = (props) => {
 
 
 export default AddData;
-
-

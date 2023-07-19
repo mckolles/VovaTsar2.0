@@ -6,7 +6,7 @@ const storage=multer.diskStorage({
       cb(null,'uploads/')
     },
     filename(req,file,cb){
-      const date=moment().format('DDMMYYYY-HHmm')
+      const date=moment().format('DDMMYYYY-HHmmssSSS')
       cb(null,`${date}-${file.originalname}`)
     }
   })
@@ -24,4 +24,4 @@ const storage=multer.diskStorage({
     fileSize:1024*1024*5
   }
   
-  module.exports=multer({storage,limits})
+  module.exports=multer({storage,fileFilter,limits})

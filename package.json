@@ -11,8 +11,8 @@
     "sequelize": "^6.32.1"
   },
   "scripts": {
-    "dev": "nodemon server.js",
+    "back": "nodemon server.js",
     "start": "node server.js",
-    "client": "npm start --prefix competitors-front"
+    "front": "npm start --prefix competitors-front"
   }
 }

@@ -5,7 +5,7 @@ const CompetitorTable = () => {
   const [competitors, setCompetitors] = useState([]);
   const [competitorsFiles, setCompetitorsFiles] = useState([]);
 
-  useEffect(() => {
+ const fetchTablesData=() => {
     fetch('http://localhost:4000/competitors')
       .then((response) => response.json())
       .then((data) => setCompetitors(data))
@@ -15,11 +15,15 @@ const CompetitorTable = () => {
       .then((data) => setCompetitorsFiles(data))
       .catch((error) => console.error(error));
     
-  }, [competitors, competitorsFiles]);
+  };
+  useEffect(() => {
+    fetchTablesData();
+  }, []);
+  
 
   return (
     <>
-    <AddData  />
+    <AddData fetchTablesData={fetchTablesData}  />
     <table>
       <thead>
         <tr>
@@ -52,4 +56,3 @@ const CompetitorTable = () => {
 };
 
 export default CompetitorTable;
-
