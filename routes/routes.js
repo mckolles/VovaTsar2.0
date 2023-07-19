@@ -35,7 +35,7 @@ router.post('/upload', upload.single('image'), (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
   
-    res.status(200).json({ message: 'File uploaded successfully' });
+    res.status(200).json({ message: 'File uploaded successfully',uploadedFileName: req.uploadedFileName  });
   });
 
   router.post('/add-competitor', async (req, res) => {

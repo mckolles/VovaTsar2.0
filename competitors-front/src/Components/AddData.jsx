@@ -1,8 +1,5 @@
 import React, { useRef, useState } from "react";
 import styles from '../app.module.css';
-import moment from 'moment';
-
-
 
 const AddData = ({fetchTablesData}) => {
   const fileInputRef = useRef(null);
@@ -32,10 +29,6 @@ const AddData = ({fetchTablesData}) => {
   const uploadFile = (file) => {
     const formData = new FormData();
     formData.append("image", file);
-    const date=moment().format('DDMMYYYY-HHmmssSSS')
-    setImagePath(`http://localhost:4000/images/${date}-${file.name}`);
-   
-   
     fetch("http://localhost:4000/upload", {
       method: "POST",
       body: formData,
@@ -43,6 +36,7 @@ const AddData = ({fetchTablesData}) => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Файл успешно загружен:", data);
+        setImagePath(`http://localhost:4000/images/${data.uploadedFileName}`);
         fileInputRef.current.value = ""
         
       })

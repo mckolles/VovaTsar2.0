@@ -5,11 +5,13 @@ const storage=multer.diskStorage({
     destination(req,file,cb){
       cb(null,'uploads/')
     },
-    filename(req,file,cb){
-      const date=moment().format('DDMMYYYY-HHmmssSSS')
-      cb(null,`${date}-${file.originalname}`)
+    filename(req, file, cb) {
+      const date = moment().format('DDMMYYYY-HHmmssSSS');
+      const filename = `${date}-${file.originalname}`;
+      cb(null, filename);
+      req.uploadedFileName = filename;
     }
-  })
+  });
   
   const fileFilter=(req,file,cb)=>{
     if(file.mimetype==='image/png'||file.mimetype==='image/jpg'){
