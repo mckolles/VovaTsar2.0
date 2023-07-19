@@ -28,9 +28,9 @@ const CompetitorTable = () => {
       <thead>
         <tr>
           <th>ID</th>
-          <th>Competitors ID </th>
-          <th>Image</th>
-          <th>Name</th>
+          <th>ID Конкурента</th>
+          <th>Изображение</th>
+          <th>Имя</th>
         </tr>
       </thead>
       <tbody>
