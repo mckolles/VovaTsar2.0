@@ -1,29 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import AddData from './AddData';
+import React, { useEffect } from 'react';
 
-const CompetitorTable = () => {
-  const [competitors, setCompetitors] = useState([]);
-  const [competitorsFiles, setCompetitorsFiles] = useState([]);
+const CompetitorTable = ({
+  fetchTablesData,
+  competitorsState,
+  competitorsFilesState,
+  competitorsAll,
+  competitorsFiles,
+  competitors
+} ) => {
 
- const fetchTablesData=() => {
-    fetch('http://localhost:4000/competitors')
-      .then((response) => response.json())
-      .then((data) => setCompetitors(data))
-      .catch((error) => console.error(error));
-    fetch('http://localhost:4000/files')
-      .then((response) => response.json())
-      .then((data) => setCompetitorsFiles(data))
-      .catch((error) => console.error(error));
-    
-  };
   useEffect(() => {
     fetchTablesData();
-  }, []);
-  
+  }, );
 
   return (
     <>
-    <AddData fetchTablesData={fetchTablesData}  />
+   {competitorsAll&&
     <table>
       <thead>
         <tr>
@@ -34,12 +26,11 @@ const CompetitorTable = () => {
         </tr>
       </thead>
       <tbody>
-      {competitorsFiles.map((file) => {
-    const matchingCompetitor = competitors.find(
+      {competitorsFilesState.map((file) => {
+    const matchingCompetitor = competitorsState.find(
       (competitor) => competitor.id === file.competitors_id
     );
     const name = matchingCompetitor ? matchingCompetitor.name : '';
-
     return (
       <tr key={file.id}>
         <td>{file.id}</td>
@@ -50,7 +41,47 @@ const CompetitorTable = () => {
     );
   })}
       </tbody>
+    </table>}
+    {competitors&&
+    <table>
+       <thead>
+        <tr>
+          <th>ID</th>
+          <th>Имя</th>
+        </tr>
+      </thead>
+      <tbody>
+        {competitorsState.map((competitorsTable)=>{
+          return(
+            <tr key={competitorsTable.id}>
+              <td>{competitorsTable.id}</td>
+              <td>{competitorsTable.name}</td>
+            </tr>
+          )
+        })}
+      </tbody>
     </table>
+    }
+    {competitorsFiles&&
+    <table>
+       <thead>
+        <tr>
+          <th>ID</th>
+          <th>Изображение</th>
+        </tr>
+      </thead>
+      <tbody>
+        {competitorsFilesState.map((competitorsFilesTable)=>{
+          return(
+            <tr key={competitorsFilesTable.id}>
+              <td>{competitorsFilesTable.id}</td>
+              <td><img src={competitorsFilesTable.image} alt="альтернативный текст" style={{ width: '100px', height: '100px' }} /></td>
+            </tr>
+          )
+        })}
+      </tbody>
+    </table>
+    }
     </>
   );
 };

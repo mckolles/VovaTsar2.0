@@ -14,5 +14,8 @@
     "back": "nodemon server.js",
     "start": "node server.js",
     "front": "npm start --prefix competitors-front"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }
