@@ -11,7 +11,7 @@ const CompetitorTable = ({
 
   useEffect(() => {
     fetchTablesData();
-  }, );
+  },[] );
 
   return (
     <>
