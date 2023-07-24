@@ -1,17 +1,13 @@
 import React from 'react';
-import styles from './app.module.css';
 import ContainerAddData from './Components/ContainerAddData';
+import styles from './Styles/App.module.css'
 
 
 const App = () => {
-  
   return (
-    <div className={styles.App}>
-      <div className={styles.competitors_table}>
-        <h1>Справочник конкурентов</h1>
+      <div className={styles}>
         <ContainerAddData />
       </div>
-    </div>
   );
 };
 

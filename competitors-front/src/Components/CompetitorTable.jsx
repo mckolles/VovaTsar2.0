@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import styles from '../Styles/CompetitorTable.module.css'
 
 const CompetitorTable = ({
   fetchTablesData,
@@ -6,20 +7,28 @@ const CompetitorTable = ({
   competitorsFilesState,
   competitorsAll,
   competitorsFiles,
-  competitors
+  competitors,
+  editMode,
+  handleSetEditMode
 } ) => {
 
   useEffect(() => {
     fetchTablesData();
   },[] );
 
+  const changeConst= <div className={styles.changeConst}>
+  {editMode&&<button><img src="/img/confirm-icon.png" alt="Confirm"></img></button>}
+  {!editMode&&<button onClick={()=>handleSetEditMode(true)}><img src="/img/update-icon.png" alt="Update"></img></button>}
+  <button><img src="/img/delete-icon.png" alt="Delete"></img></button>
+  </div>
+
   return (
-    <>
+    <div className={styles.competitors_tables}>
    {competitorsAll&&
     <table>
       <thead>
         <tr>
-          <th>ID</th>
+          <th >ID</th>
           <th>ID Конкурента</th>
           <th>Изображение</th>
           <th>Имя</th>
@@ -36,12 +45,17 @@ const CompetitorTable = ({
         <td>{file.id}</td>
         <td>{file.competitors_id}</td>
         <td><img src={file.image} alt="альтернативный текст" style={{ width: '100px', height: '100px' }} /></td>
-        <td>{name}</td>
+        <td>
+          {name}
+          {changeConst}
+          </td>
       </tr>
     );
   })}
       </tbody>
-    </table>}
+    </table>
+    }
+
     {competitors&&
     <table>
        <thead>
@@ -55,7 +69,8 @@ const CompetitorTable = ({
           return(
             <tr key={competitorsTable.id}>
               <td>{competitorsTable.id}</td>
-              <td>{competitorsTable.name}</td>
+              <td>{competitorsTable.name}{changeConst}</td>
+              
             </tr>
           )
         })}
@@ -75,14 +90,14 @@ const CompetitorTable = ({
           return(
             <tr key={competitorsFilesTable.id}>
               <td>{competitorsFilesTable.id}</td>
-              <td><img src={competitorsFilesTable.image} alt="альтернативный текст" style={{ width: '100px', height: '100px' }} /></td>
+              <td><img src={competitorsFilesTable.image} alt="альтернативный текст" style={{ width: '100px', height: '100px' }} />{changeConst}</td>
             </tr>
           )
         })}
       </tbody>
     </table>
     }
-    </>
+    </div>
   );
 };
 

@@ -10,7 +10,8 @@ const ContainerAddData=()=>{
     const [isFileUploaded, setIsFileUploaded] = useState(false);
     const [competitorsState, setCompetitorsState] = useState([]);
     const [competitorsFilesState, setCompetitorsFilesState] = useState([]);
-    const [error,setError]= useState([]);
+    const [error,setError]= useState(null);
+    const [editMode,setEditMode]=useState(false);
   
    const fetchTablesData=() => {
       fetch('http://localhost:4000/competitors')
@@ -54,6 +55,10 @@ const ContainerAddData=()=>{
     const handlesetStateOfH=(stateOfH)=>{
       setStateOfH(stateOfH);
     }
+
+const handleSetEditMode=(boolean)=>{
+    setEditMode(boolean)
+}
   
     const uploadFile = (file) => {
       const formData = new FormData();
@@ -153,6 +158,8 @@ const ContainerAddData=()=>{
        handleCompetitorsNameChange={handleCompetitorsNameChange}
        error={error}
        setError={setError}
+       editMode={editMode}
+       handleSetEditMode={handleSetEditMode}
        />
     )
   

@@ -1,0 +1,31 @@
+
+.competitors_table{
+    color: black;
+        margin: 20px auto; 
+       
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        text-align: center;
+      }
+      
+      th, td {
+        padding: 10px; 
+        border-bottom: 1px solid #000000; 
+        
+      }
+      h1{
+        color:rgba(3, 3, 3, 0.842);
+        margin-bottom: 50px;
+}
+
+.changeConst{
+    display: inline;
+    margin: 5px;
+    float: right;
+}
+
+.changeConst button{
+   margin: 5px;
+}
