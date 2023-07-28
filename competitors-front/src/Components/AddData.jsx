@@ -25,7 +25,11 @@ const AddData = ({
   error,
   setError,
   handleSetEditMode,
-  editMode
+  editMode,
+  setIsFileUploaded,
+  setImagePath,
+  updateCompetitor,
+  updateCompetitorFiles
 }) => {
   
 
@@ -34,33 +38,32 @@ const AddData = ({
     setError('')
   }
 
-  return (
-    <>
-      <div className={styles.header}>
-     <h1>Справочник конкурентов</h1>
-      <h3>{stateOfH}</h3>
-      </div>
-    <div className={styles.form_row}>
-    <ErrorModal error={error} setError={setError}  />
+  const onClickTables=(tableName)=>{
+    handlesetStateOfH(tableName)
+    setIsFileUploaded(false)
+    setImagePath('')
+    
+  }
 
-    {competitors&&
-    <>
-    <button onClick={onClickBack} className={styles.btnAddData}>Назад</button>
-    <input
+  const inputCompetitorsName=
+  <input
+  type="text"
+  className={styles.input_name}
+  placeholder="Имя"
+  value={competitorsName}
+  onChange={handleCompetitorsNameChange}
+/>
+
+const inputCompetitorsId=
+<input
         type="text"
-        className={styles.input_name}
-        placeholder="Имя"
-        value={competitorsName}
-        onChange={handleCompetitorsNameChange}
+        className={styles.competitors_id}
+        placeholder="Введите ID конкурента(только цифры)"
+        value={competitorsId}
+        onChange={handleCompetitorsIdChange}
       />
-    <button onClick={addCompetitor} className={styles.btnAddData}>Добавить запись</button>
-    </>
-    }
-
-    {competitorsFiles&&
-    <>
-    <button onClick={onClickBack} className={styles.btnAddData}>Назад</button>
-      <input
+const uploadFile=<>
+<input
         type="file"
         className={styles.file_input}
         ref={fileInputRef}
@@ -70,19 +73,34 @@ const AddData = ({
       <button className={styles.btn_upload} onClick={handleUploadButtonClick}>
         {isFileUploaded?'Успешно загружено':'Загрузите изображение'}
       </button>
-       <input
-        type="text"
-        className={styles.competitors_id}
-        placeholder="Введите ID конкурента(только цифры)"
-        value={competitorsId}
-        onChange={handleCompetitorsIdChange}
-      />
+      </>
+  return (
+    <>
+      <div className={styles.header}>
+     <h1>Справочник конкурентов</h1>
+      <h3>{stateOfH}</h3>
+      </div>
+    <div className={styles.form_row}>
+    <ErrorModal error={error} setError={setError}  />
+    {competitors&&
+    <>
+    <button onClick={onClickBack} className={styles.btnAddData}>Назад</button>
+   { inputCompetitorsName}
+    <button onClick={addCompetitor} className={styles.btnAddData}>Добавить запись</button>
+    </>
+    }
+
+    {competitorsFiles&&
+    <>
+    <button onClick={onClickBack} className={styles.btnAddData}>Назад</button>
+    {uploadFile}
+    {inputCompetitorsId}   
     <button onClick={addCompetitorFiles} className={styles.btnAddData}>Добавить запись</button>
     </>
     }
 
-    {competitorsAll&&<button onClick={()=>handlesetStateOfH('Таблица Конкуренты')} className={styles.btnAddData}>Добавить имя в таблицу 'Конкуренты'</button>}
-    {competitorsAll&&<button onClick={()=>handlesetStateOfH('Таблица Файлы конкурентов')} className={styles.btnAddData}>Добавить изображение в таблицу 'Файлы конкурентов'</button>}
+    {competitorsAll&&<button onClick={()=>onClickTables('Таблица Конкуренты')} className={styles.btnAddData}>Добавить имя в таблицу 'Конкуренты'</button>}
+    {competitorsAll&&<button onClick={()=>onClickTables('Таблица Файлы конкурентов')} className={styles.btnAddData}>Добавить изображение в таблицу 'Файлы конкурентов'</button>}
     </div>
 
     <CompetitorTable
@@ -95,10 +113,14 @@ const AddData = ({
      competitors={competitors}
      handleSetEditMode={handleSetEditMode}
      editMode={editMode}
+     inputCompetitorsId={inputCompetitorsId}
+     inputCompetitorsName={inputCompetitorsName}
+     uploadFile={uploadFile}
+     updateCompetitor={updateCompetitor}
+     updateCompetitorFiles={updateCompetitorFiles}
       />
     </>
   );
 };
 
-
-export default AddData;
+export default AddData

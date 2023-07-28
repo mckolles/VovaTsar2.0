@@ -10,8 +10,8 @@ const ContainerAddData=()=>{
     const [isFileUploaded, setIsFileUploaded] = useState(false);
     const [competitorsState, setCompetitorsState] = useState([]);
     const [competitorsFilesState, setCompetitorsFilesState] = useState([]);
-    const [error,setError]= useState(null);
-    const [editMode,setEditMode]=useState(false);
+    const [error,setError]= useState();
+    const [editMode,setEditMode]=useState([]);
   
    const fetchTablesData=() => {
       fetch('http://localhost:4000/competitors')
@@ -56,9 +56,15 @@ const ContainerAddData=()=>{
       setStateOfH(stateOfH);
     }
 
-const handleSetEditMode=(boolean)=>{
-    setEditMode(boolean)
+const handleSetEditMode=(id,method)=>{
+  if(method==='push'){
+    setEditMode((prevEditMode) => [...prevEditMode, id]);
+  }
+  if(method==='delete'){
+    setEditMode((prevEditMode) => prevEditMode.filter((item) => item !== id))
+  }
 }
+
   
     const uploadFile = (file) => {
       const formData = new FormData();
@@ -134,8 +140,43 @@ const handleSetEditMode=(boolean)=>{
         })
         .catch((error) => {
           console.error("Ошибка при добавлении записи в таблицу competitors_files:", error);
+        });  
+    };
+    const updateCompetitor = (id) => {
+      fetch(`http://localhost:4000/update-competitor/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          competitorsName: competitorsName,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Запись успешно обновлена:", data);
+          fetchTablesData();
+          setError("Вы успешно обновили запись!");
+        })
+        .catch((error) => {
+          console.error("Ошибка при обновлении записи:", error);
         });
     };
+  const updateCompetitorFiles = (id) => {
+      fetch(`http://localhost:4000/update-competitor-files/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            imagePath: imagePath, 
+            competitorsId: competitorsId,
+          }),
+        })
+        .then((response) => {
+          if (!response.ok) {
+            setError('Вы ввели несуществующий ID конкурента, введите ID, который есть в таблице "Конкуренты"');
+            return Promise.reject('Invalid ID');
+          }
+          return response.json();
+        })
+      }
     return(
        <AddData
        fetchTablesData={fetchTablesData}
@@ -160,9 +201,12 @@ const handleSetEditMode=(boolean)=>{
        setError={setError}
        editMode={editMode}
        handleSetEditMode={handleSetEditMode}
+       updateCompetitor={updateCompetitor}
+       updateCompetitorFiles={updateCompetitorFiles}
        />
     )
   
+
 }
 
 export default ContainerAddData

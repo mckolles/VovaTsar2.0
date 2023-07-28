@@ -67,6 +67,54 @@ router.post('/upload', upload.single('image'), (req, res) => {
       res.status(500).json({ error: 'Ошибка сервера' });
     }
   });
-  
+
+router.put('/update-competitor/:id',async(req,res)=>{
+  const {id} = req.params;
+  const { competitorsName } = req.body
+  try {
+    const [rowsAffected] = await Competitor.update(
+      { name: competitorsName },
+      { where: {id} }
+    );
+
+    if (rowsAffected > 0) {
+      console.log(`Competitor with ID ${id} updated successfully.`);
+      return res.status(200).json({ message: 'Competitor updated successfully.' });
+    } else {
+      return res.status(404).json({ error: `Competitor with ID ${id} not found.` });
+    }
+  } catch (error) {
+    console.error('Error while updating competitor:', error);
+    return res.status(500).json({ error: 'Internal server error.' });
+  }
+})
+
+router.put('/update-competitor-files/:id',async(req,res)=>{
+  const {id} = req.params;
+  const { imagePath, competitorsId } = await req.body;
+
+  const existingCompetitor = await Competitor.findOne({ where: { id: competitorsId } });
+  if (!existingCompetitor) {
+    return res.status(404).json({ error: `Competitor with ID ${competitorsId} not found.` });
+  }
+  try {
+    const competitorFile = await CompetitorFiles.update(
+      {
+        image: imagePath,
+        competitors_id: competitorsId,
+        updated_at: new Date(),
+      },
+      { where: { id } }
+    );
+    
+    res.status(200).json(competitorFile);
+  } catch (error) {
+    console.error('Ошибка при обновлении файла конкурента:', error);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
+
+
 
 module.exports=router
