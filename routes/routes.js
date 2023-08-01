@@ -73,7 +73,10 @@ router.put('/update-competitor/:id',async(req,res)=>{
   const { competitorsName } = req.body
   try {
     const [rowsAffected] = await Competitor.update(
-      { name: competitorsName },
+      {
+        name: competitorsName, 
+        updated_at: new Date()
+      },
       { where: {id} }
     );
 
@@ -110,7 +113,39 @@ router.put('/update-competitor-files/:id',async(req,res)=>{
   }
 });
 
-
+router.put('/update-all/:id',async(req,res)=>{
+  const {id} = req.params;
+  const { imagePath, competitorsId,competitorsName} = await req.body;
+  try {
+    const competitorFile = await CompetitorFiles.update(
+      {
+        image: imagePath,
+        competitors_id: competitorsId,
+        updated_at: new Date(),
+      },
+      { where: { id } }
+      
+    );
+    res.status(200).json(competitorFile);
+  }
+  catch (error) {
+    console.error('Ошибка при обновлении общей таблицы (CompetitorFiles) :', error);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+  try {
+    const competitor = await Competitor.update(
+      {
+        name: competitorsName, 
+        updated_at: new Date()
+      },
+      { where: {id:competitorsId} }
+    )
+    }
+  catch (error) {
+    console.error('Ошибка при обновлении общей таблицы(Competitor) :', error);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+})
 
 
 module.exports=router

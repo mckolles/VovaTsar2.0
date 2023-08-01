@@ -15,7 +15,8 @@ const CompetitorTable = ({
   updateCompetitor,
   updateCompetitorFiles,
   handleEdit,
-  isLockEditMode
+  isLockEditMode,
+  updateAll
 } ) => {
 
 
@@ -25,18 +26,20 @@ const CompetitorTable = ({
   },[] );
 
 
-  const updateCompetitorhandle=(id)=>{
-     updateCompetitor(id)
-     handleEdit(id,false,'delete')
+  const updateCompetitorHandle=(id)=>{
+      updateCompetitor(id)
+      handleEdit(id,false,'delete')
   }
 
-  const updateCompetitorFileshandle=(id)=>{
-    updateCompetitorFiles(id)
+  const updateCompetitorFilesHandle=async(id)=>{
+    await updateCompetitorFiles(id)
     handleEdit(id,false,'delete')
   }
-
-
- 
+  const updateAllhandle=async(id)=>{
+    await  updateAll(id)
+    handleEdit(id,false,'delete')
+  }
+  
 
   const changeConst=(id,method)=> <div className={styles.changeConst}>
   {editMode.includes(id)&&<button key={`confirm-${id}`} onClick={()=>method(id)}><img src="/img/confirm-icon.png" alt="Confirm"></img></button>}
@@ -73,7 +76,7 @@ const CompetitorTable = ({
         <td><img src={file.image} alt="альтернативный текст" style={{ width: '100px', height: '100px' }} /></td>
         <td>
           {name}
-          {!isLockEditMode&&changeConst(file.id,updateCompetitor)}
+          {!isLockEditMode&&changeConst(file.id,updateAllhandle)}
           </td>
         </>
         }
@@ -83,7 +86,7 @@ const CompetitorTable = ({
         <td>{uploadFile}</td>
         <td>
           {inputCompetitorsName}
-          {changeConst(file.id,updateCompetitorhandle)}
+          {changeConst(file.id,updateAllhandle)}
           </td>
         </>
         }
@@ -106,12 +109,12 @@ const CompetitorTable = ({
           return(
             <tr key={competitorsTable.id}>
               <td>{competitorsTable.id}</td>
-              {!editMode.includes(competitorsTable.id)&&<td>{competitorsTable.name}{!isLockEditMode&&changeConst(competitorsTable.id,updateCompetitorhandle)}</td>}
+              {!editMode.includes(competitorsTable.id)&&<td>{competitorsTable.name}{!isLockEditMode&&changeConst(competitorsTable.id,updateCompetitorHandle)}</td>}
               {editMode.includes(competitorsTable.id)&&
               <>
               <td>
           {inputCompetitorsName}
-          {changeConst(competitorsTable.id,updateCompetitorhandle)}
+          {changeConst(competitorsTable.id,updateCompetitorHandle)}
           </td>
         </>
         } 
@@ -139,7 +142,7 @@ const CompetitorTable = ({
               <>
               <td>{competitorsFilesTable.competitors_id}</td>
               <td><img src={competitorsFilesTable.image} alt="альтернативный текст" style={{ width: '100px', height: '100px' }} />
-              {!isLockEditMode&&changeConst(competitorsFilesTable.id,updateCompetitorFileshandle)}</td>
+              {!isLockEditMode&&changeConst(competitorsFilesTable.id,updateCompetitorFilesHandle)}</td>
               </>
               }
             {editMode.includes(competitorsFilesTable.id)&&
@@ -147,7 +150,7 @@ const CompetitorTable = ({
               <td>{inputCompetitorsId}</td>
               <td>
           {uploadFile}
-          {changeConst(competitorsFilesTable.id,updateCompetitorFileshandle)}
+          {changeConst(competitorsFilesTable.id,updateCompetitorFilesHandle)}
           </td>
         </>
         } 

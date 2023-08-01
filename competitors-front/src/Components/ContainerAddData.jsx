@@ -160,7 +160,6 @@ const ContainerAddData=()=>{
         .then((response) => response.json())
         .then((data) => {
           console.log("Запись успешно обновлена:", data); 
-          setСompetitorsId("");
           setCompetitorsName("");
           fetchTablesData();
           setError("Вы успешно обновили запись!");
@@ -169,8 +168,9 @@ const ContainerAddData=()=>{
           console.error("Ошибка при обновлении записи:", error);
         });
     };
-    const updateCompetitorFiles = (id) => {
-      fetch(`http://localhost:4000/update-competitor-files/${id}`, {
+    const updateCompetitorFiles = async(id) => {
+      try {
+        await fetch(`http://localhost:4000/update-competitor-files/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -180,6 +180,7 @@ const ContainerAddData=()=>{
       })
       .then((response) => {
         if (!response.ok) {
+          setСompetitorsId("")
           setError('Вы ввели несуществующий ID конкурента, введите ID, который есть в таблице "Конкуренты"');
           throw new Error('Invalid ID'); 
         }
@@ -189,6 +190,7 @@ const ContainerAddData=()=>{
         if (isFileUploaded) {
           console.log("Запись успешно обновлена:", data); 
           setIsFileUploaded(false);
+          setСompetitorsId("")
           fetchTablesData();
           setError("Вы успешно обновили запись!");
         } 
@@ -202,6 +204,66 @@ const ContainerAddData=()=>{
       .catch((error) => {
         console.error("Ошибка при обновлении записи:", error);
       });
+      }
+      catch (error) {
+        console.error("Ошибка при обновлении записи:", error);
+      }
+    }
+    
+    const updateAll = async(id) => {
+      if(!imagePath){
+        return
+      }
+      try {
+        await fetch(`http://localhost:4000/update-all/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          imagePath: imagePath, 
+          competitorsId: competitorsId,
+          competitorsName: competitorsName
+        }),
+      })
+      .then((data) => {
+        if (isFileUploaded) {
+          console.log("Запись успешно обновлена:", data); 
+          setIsFileUploaded(false);
+          setСompetitorsId("")
+          setCompetitorsName("");
+          fetchTablesData();
+          setError("Вы успешно обновили запись!");
+        } 
+        if (!competitorsId){
+          setError("Введите ID конкурента")
+          throw new Error('Invalid ID');
+        }
+        else if (!isFileUploaded){
+          setError("Вы не загрузили фотографию!");
+          throw new Error('Invalid image');
+        }
+        else if(!competitorsName){
+          setError("Вы не указали имя");
+          throw new Error('Invalid name   ');
+        }
+      })
+      .then((response) => {
+        if (!response.ok) {
+          setСompetitorsId("")
+          setIsFileUploaded(false);
+          setCompetitorsName("");
+          setError('Вы ввели несуществующий ID конкурента, введите ID, который есть в таблице "Конкуренты"');
+          throw new Error('Invalid ID'); 
+        } 
+        return response.json();
+      })
+      .catch((error) => {
+        console.error("Ошибка при обновлении записи:", error);
+      });
+      
+      }
+      catch (error) {
+        console.error("Ошибка при обновлении записи:", error);
+      }
     }
     
       
@@ -235,6 +297,7 @@ const ContainerAddData=()=>{
        setImagePath={setImagePath}
        isLockEditMode={isLockEditMode}
        handleEdit={handleEdit}
+       updateAll={updateAll}
 
        />
     )
