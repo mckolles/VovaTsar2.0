@@ -147,5 +147,32 @@ router.put('/update-all/:id',async(req,res)=>{
   }
 })
 
+router.delete('/delete-comptitor/:id',async(req,res)=>{
+  const {id} = req.params;
+  try{
+    await Competitor.destroy(
+      {where:{id}}
+    )
+    res.status(200).json('Успешно')
+  }
+  catch (error) {
+    console.error('Ошибка при удалении(Competitor) :', error);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+})
+
+router.delete('/delete-comptitor-files/:id',async(req,res)=>{
+  const {id} = req.params;
+  try{
+    await CompetitorFiles.destroy(
+      {where:{id}}
+    )
+    res.status(200).json('Успешно')
+  }
+  catch (error) {
+    console.error('Ошибка при удалении(CompetitorFiles) :', error);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+})
 
 module.exports=router

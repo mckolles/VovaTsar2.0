@@ -211,9 +211,6 @@ const ContainerAddData=()=>{
     }
     
     const updateAll = async(id) => {
-      if(!imagePath){
-        return
-      }
       try {
         await fetch(`http://localhost:4000/update-all/${id}`, {
         method: "PUT",
@@ -235,15 +232,19 @@ const ContainerAddData=()=>{
         } 
         if (!competitorsId){
           setError("Введите ID конкурента")
-          throw new Error('Invalid ID');
+          return 
         }
         else if (!isFileUploaded){
           setError("Вы не загрузили фотографию!");
-          throw new Error('Invalid image');
+          return 
         }
         else if(!competitorsName){
           setError("Вы не указали имя");
-          throw new Error('Invalid name   ');
+          return 
+        }
+        else if(!competitorsName&&!isFileUploaded&&!competitorsId){
+          setError("Все поля обязательны!")
+          return
         }
       })
       .then((response) => {
@@ -265,8 +266,52 @@ const ContainerAddData=()=>{
         console.error("Ошибка при обновлении записи:", error);
       }
     }
+
+    const deleteCompetitor=async(id)=>{
+      try {
+        await fetch(`http://localhost:4000/delete-comptitor/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+      })
+      .then((response) => {
+        if (response.ok) {
+          setError('Вы вуспешно удалили запись!');
+          fetchTablesData();
+          return response.json();
+        }
+        else{
+          throw new Error('Invalid ID'); 
+        }
+      })
+    }
+      catch (error) {
+        setError(`К сожалению произошла ошибка.${error}`)
+        console.error("Ошибка при обновлении записи:", error);
+      }
+    }
+    const deleteCompetitorFiles=async(id)=>{
+      try {
+        await fetch(`http://localhost:4000/delete-comptitor-files/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" }
+      })
+      .then((response) => {
+        if (response.ok) {
+          setError('Вы вуспешно удалили запись!');
+          fetchTablesData();
+          return response.json();
+        }
+        else{
+          throw new Error('Invalid ID'); 
+        }
+      })
+    }
+      catch (error) {
+        setError(`К сожалению произошла ошибка.${error}`)
+        console.error("Ошибка при обновлении записи:", error);
+      }
+    }
     
-      
     return(
        <AddData
        fetchTablesData={fetchTablesData}
@@ -298,6 +343,8 @@ const ContainerAddData=()=>{
        isLockEditMode={isLockEditMode}
        handleEdit={handleEdit}
        updateAll={updateAll}
+       deleteCompetitor={deleteCompetitor}
+       deleteCompetitorFiles={deleteCompetitorFiles}
 
        />
     )

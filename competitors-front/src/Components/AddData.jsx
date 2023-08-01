@@ -32,8 +32,9 @@ const AddData = ({
   updateCompetitorFiles,
   handleEdit,
   isLockEditMode,
-  updateAll
-  
+  updateAll,
+  deleteCompetitor,
+  deleteCompetitorFiles
 }) => {
   
 
@@ -127,6 +128,8 @@ const uploadFile=<>
      handleEdit={handleEdit}
      isLockEditMode={isLockEditMode}
      updateAll={updateAll}
+     deleteCompetitor={deleteCompetitor}
+     deleteCompetitorFiles={deleteCompetitorFiles}
       />
     </>
   );
