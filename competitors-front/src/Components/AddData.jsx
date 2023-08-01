@@ -29,19 +29,24 @@ const AddData = ({
   setIsFileUploaded,
   setImagePath,
   updateCompetitor,
-  updateCompetitorFiles
+  updateCompetitorFiles,
+  handleEdit,
+  isLockEditMode
+  
 }) => {
   
 
   const onClickBack=()=>{
     handlesetStateOfH('Общая таблица')
     setError('')
+    handleEdit(null,false,'clear')
   }
 
   const onClickTables=(tableName)=>{
     handlesetStateOfH(tableName)
     setIsFileUploaded(false)
     setImagePath('')
+    handleEdit(null,false,'clear')
     
   }
 
@@ -85,7 +90,7 @@ const uploadFile=<>
     {competitors&&
     <>
     <button onClick={onClickBack} className={styles.btnAddData}>Назад</button>
-   { inputCompetitorsName}
+   {!editMode.length>0&&inputCompetitorsName}
     <button onClick={addCompetitor} className={styles.btnAddData}>Добавить запись</button>
     </>
     }
@@ -93,8 +98,8 @@ const uploadFile=<>
     {competitorsFiles&&
     <>
     <button onClick={onClickBack} className={styles.btnAddData}>Назад</button>
-    {uploadFile}
-    {inputCompetitorsId}   
+    {!editMode.length>0&&uploadFile}
+    {!editMode.length>0&&inputCompetitorsId}   
     <button onClick={addCompetitorFiles} className={styles.btnAddData}>Добавить запись</button>
     </>
     }
@@ -118,6 +123,8 @@ const uploadFile=<>
      uploadFile={uploadFile}
      updateCompetitor={updateCompetitor}
      updateCompetitorFiles={updateCompetitorFiles}
+     handleEdit={handleEdit}
+     isLockEditMode={isLockEditMode}
       />
     </>
   );

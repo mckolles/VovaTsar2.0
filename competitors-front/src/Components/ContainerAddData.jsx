@@ -12,7 +12,8 @@ const ContainerAddData=()=>{
     const [competitorsFilesState, setCompetitorsFilesState] = useState([]);
     const [error,setError]= useState();
     const [editMode,setEditMode]=useState([]);
-  
+    const [isLockEditMode, setIsLockEditMode] = useState(false);
+
    const fetchTablesData=() => {
       fetch('http://localhost:4000/competitors')
         .then((response) => response.json())
@@ -56,16 +57,23 @@ const ContainerAddData=()=>{
       setStateOfH(stateOfH);
     }
 
-const handleSetEditMode=(id,method)=>{
-  if(method==='push'){
-    setEditMode((prevEditMode) => [...prevEditMode, id]);
-  }
-  if(method==='delete'){
-    setEditMode((prevEditMode) => prevEditMode.filter((item) => item !== id))
-  }
-}
+    const handleEdit=(id, isLocked,method)=>{
+      handleSetEditMode(id, method)
+      setIsLockEditMode(isLocked)
+    }
+    
+    const handleSetEditMode = (id, method) => {
+      if (method === 'push') {
+        setEditMode((prevEditMode) => [...prevEditMode, id]);
+      } else if (method === 'delete') {
+        setEditMode((prevEditMode) => prevEditMode.filter((item) => item !== id));
+      } 
+        else if(method==='clear'){
+          setEditMode([])
+        }
+    };
 
-  
+
     const uploadFile = (file) => {
       const formData = new FormData();
       formData.append("image", file);
@@ -126,7 +134,6 @@ const handleSetEditMode=(id,method)=>{
       .then((response) => {
         if (!response.ok) {
           setError('Вы ввели несуществующий ID конкурента, введите ID, который есть в таблице "Конкуренты"');
-          return Promise.reject('Invalid ID');
         }
         return response.json();
       })
@@ -152,7 +159,9 @@ const handleSetEditMode=(id,method)=>{
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log("Запись успешно обновлена:", data);
+          console.log("Запись успешно обновлена:", data); 
+          setСompetitorsId("");
+          setCompetitorsName("");
           fetchTablesData();
           setError("Вы успешно обновили запись!");
         })
@@ -160,23 +169,42 @@ const handleSetEditMode=(id,method)=>{
           console.error("Ошибка при обновлении записи:", error);
         });
     };
-  const updateCompetitorFiles = (id) => {
+    const updateCompetitorFiles = (id) => {
       fetch(`http://localhost:4000/update-competitor-files/${id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            imagePath: imagePath, 
-            competitorsId: competitorsId,
-          }),
-        })
-        .then((response) => {
-          if (!response.ok) {
-            setError('Вы ввели несуществующий ID конкурента, введите ID, который есть в таблице "Конкуренты"');
-            return Promise.reject('Invalid ID');
-          }
-          return response.json();
-        })
-      }
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          imagePath: imagePath, 
+          competitorsId: competitorsId,
+        }),
+      })
+      .then((response) => {
+        if (!response.ok) {
+          setError('Вы ввели несуществующий ID конкурента, введите ID, который есть в таблице "Конкуренты"');
+          throw new Error('Invalid ID'); 
+        }
+        return response.json(); 
+      })
+      .then((data) => {
+        if (isFileUploaded) {
+          console.log("Запись успешно обновлена:", data); 
+          setIsFileUploaded(false);
+          fetchTablesData();
+          setError("Вы успешно обновили запись!");
+        } 
+        if (!competitorsId){
+          setError("Введите ID конкурента")
+        }
+        if (!isFileUploaded){
+          setError("Вы не загрузили фотографию!");
+        }
+      })
+      .catch((error) => {
+        console.error("Ошибка при обновлении записи:", error);
+      });
+    }
+    
+      
     return(
        <AddData
        fetchTablesData={fetchTablesData}
@@ -203,6 +231,11 @@ const handleSetEditMode=(id,method)=>{
        handleSetEditMode={handleSetEditMode}
        updateCompetitor={updateCompetitor}
        updateCompetitorFiles={updateCompetitorFiles}
+       setIsFileUploaded={setIsFileUploaded}
+       setImagePath={setImagePath}
+       isLockEditMode={isLockEditMode}
+       handleEdit={handleEdit}
+
        />
     )
   

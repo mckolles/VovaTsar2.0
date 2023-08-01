@@ -93,10 +93,6 @@ router.put('/update-competitor-files/:id',async(req,res)=>{
   const {id} = req.params;
   const { imagePath, competitorsId } = await req.body;
 
-  const existingCompetitor = await Competitor.findOne({ where: { id: competitorsId } });
-  if (!existingCompetitor) {
-    return res.status(404).json({ error: `Competitor with ID ${competitorsId} not found.` });
-  }
   try {
     const competitorFile = await CompetitorFiles.update(
       {

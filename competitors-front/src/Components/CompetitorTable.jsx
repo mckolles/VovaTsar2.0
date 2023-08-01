@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffect } from 'react';
 import styles from '../Styles/CompetitorTable.module.css'
 
 const CompetitorTable = ({
@@ -9,33 +9,37 @@ const CompetitorTable = ({
   competitorsFiles,
   competitors,
   editMode,
-  handleSetEditMode,
   uploadFile,
   inputCompetitorsName,
   inputCompetitorsId,
   updateCompetitor,
-  updateCompetitorFiles
+  updateCompetitorFiles,
+  handleEdit,
+  isLockEditMode
 } ) => {
 
-  const [isLockEditMode, setIsLockEditMode] = useState(false);
 
-  const handleEdit=(id, isLocked,method)=>{
-    handleSetEditMode(id, method)
-    setIsLockEditMode(isLocked)
-  }
- 
+
   useEffect(() => {
     fetchTablesData();
   },[] );
 
-  const updateButton=(id,competitorsId)=>{
-    updateCompetitor(competitorsId)
+
+  const updateCompetitorhandle=(id)=>{
+     updateCompetitor(id)
+     handleEdit(id,false,'delete')
+  }
+
+  const updateCompetitorFileshandle=(id)=>{
     updateCompetitorFiles(id)
     handleEdit(id,false,'delete')
-   
   }
-  const changeConst=(id,competitorsId)=> <div className={styles.changeConst}>
-  {editMode.includes(id)&&<button key={`confirm-${id}`} onClick={()=>updateButton(id,competitorsId)}><img src="/img/confirm-icon.png" alt="Confirm"></img></button>}
+
+
+ 
+
+  const changeConst=(id,method)=> <div className={styles.changeConst}>
+  {editMode.includes(id)&&<button key={`confirm-${id}`} onClick={()=>method(id)}><img src="/img/confirm-icon.png" alt="Confirm"></img></button>}
   {!editMode.includes(id)&&<button  key={`update-${id}`} onClick={()=>handleEdit(id,true,'push')}><img src="/img/update-icon.png" alt="Update"></img></button>}
   <button key={`delete-${id}`}><img src="/img/delete-icon.png" alt="Delete"></img></button>
   </div>
@@ -69,7 +73,7 @@ const CompetitorTable = ({
         <td><img src={file.image} alt="альтернативный текст" style={{ width: '100px', height: '100px' }} /></td>
         <td>
           {name}
-          {!isLockEditMode&&changeConst(file.id,file.competitors_id)}
+          {!isLockEditMode&&changeConst(file.id,updateCompetitor)}
           </td>
         </>
         }
@@ -79,7 +83,7 @@ const CompetitorTable = ({
         <td>{uploadFile}</td>
         <td>
           {inputCompetitorsName}
-          {changeConst(file.id,file.competitors_id)}
+          {changeConst(file.id,updateCompetitorhandle)}
           </td>
         </>
         }
@@ -102,7 +106,15 @@ const CompetitorTable = ({
           return(
             <tr key={competitorsTable.id}>
               <td>{competitorsTable.id}</td>
-              <td>{competitorsTable.name}{changeConst}</td>     
+              {!editMode.includes(competitorsTable.id)&&<td>{competitorsTable.name}{!isLockEditMode&&changeConst(competitorsTable.id,updateCompetitorhandle)}</td>}
+              {editMode.includes(competitorsTable.id)&&
+              <>
+              <td>
+          {inputCompetitorsName}
+          {changeConst(competitorsTable.id,updateCompetitorhandle)}
+          </td>
+        </>
+        } 
             </tr>
           )
         })}
@@ -114,6 +126,7 @@ const CompetitorTable = ({
        <thead>
         <tr>
           <th>ID</th>
+          <th>ID Конкурента</th>
           <th>Изображение</th>
         </tr>
       </thead>
@@ -122,7 +135,22 @@ const CompetitorTable = ({
           return(
             <tr key={competitorsFilesTable.id}>
               <td>{competitorsFilesTable.id}</td>
-              <td><img src={competitorsFilesTable.image} alt="альтернативный текст" style={{ width: '100px', height: '100px' }} />{changeConst}</td>
+              {!editMode.includes(competitorsFilesTable.id)&&
+              <>
+              <td>{competitorsFilesTable.competitors_id}</td>
+              <td><img src={competitorsFilesTable.image} alt="альтернативный текст" style={{ width: '100px', height: '100px' }} />
+              {!isLockEditMode&&changeConst(competitorsFilesTable.id,updateCompetitorFileshandle)}</td>
+              </>
+              }
+            {editMode.includes(competitorsFilesTable.id)&&
+              <>
+              <td>{inputCompetitorsId}</td>
+              <td>
+          {uploadFile}
+          {changeConst(competitorsFilesTable.id,updateCompetitorFileshandle)}
+          </td>
+        </>
+        } 
             </tr>
           )
         })}
