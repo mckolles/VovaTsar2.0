@@ -113,6 +113,10 @@ const ContainerAddData=()=>{
       })
         .then((response) => response.json())
         .then((data) => {
+          if(!competitorsName){
+            setError('Вы не указали имя!')
+            return
+          }
           console.log("Запись успешно добавлена в таблицу competitors:", data);
           setCompetitorsName("");
           fetchTablesData()
@@ -131,24 +135,36 @@ const ContainerAddData=()=>{
           competitorsId: competitorsId,
         }),
       })
-      .then((response) => {
-        if (!response.ok) {
+        .then((response) => {
+          if (!response.ok) {
           setError('Вы ввели несуществующий ID конкурента, введите ID, который есть в таблице "Конкуренты"');
-        }
-        return response.json();
-      })
+          throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
         .then((data) => {
-          console.log("Запись успешно добавлена в таблицу competitors_files:", data);
-          setСompetitorsId("");
-          setCompetitorsName("");
-          fetchTablesData()
-          setIsFileUploaded(false)
-          setError('Вы успешно добавили запись!')
+          if (isFileUploaded) {
+            console.log("Запись успешно обновлена:", data); 
+            setIsFileUploaded(false);
+            setСompetitorsId("")
+            fetchTablesData();
+            setError("Вы успешно обновили запись!");
+            console.log("Запись успешно добавлена в таблицу competitors_files:", data);
+          } 
+          else if (!competitorsId){
+            setError("Введите ID конкурента")
+            return
+          }
+          else if (!isFileUploaded){
+            setError("Вы не загрузили фотографию!");
+            return
+          }
         })
         .catch((error) => {
           console.error("Ошибка при добавлении записи в таблицу competitors_files:", error);
         });  
     };
+    
     const updateCompetitor = (id) => {
       fetch(`http://localhost:4000/update-competitor/${id}`, {
         method: "PUT",
@@ -159,6 +175,10 @@ const ContainerAddData=()=>{
       })
         .then((response) => response.json())
         .then((data) => {
+          if(!competitorsName){
+            setError('Вы не указали имя!')
+            return
+          }
           console.log("Запись успешно обновлена:", data); 
           setCompetitorsName("");
           fetchTablesData();
@@ -194,11 +214,13 @@ const ContainerAddData=()=>{
           fetchTablesData();
           setError("Вы успешно обновили запись!");
         } 
-        if (!competitorsId){
+        else if (!competitorsId){
           setError("Введите ID конкурента")
+          return
         }
-        if (!isFileUploaded){
+        else if (!isFileUploaded){
           setError("Вы не загрузили фотографию!");
+          return
         }
       })
       .catch((error) => {

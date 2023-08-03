@@ -37,6 +37,7 @@ const AddData = ({
   deleteCompetitorFiles
 }) => {
   
+  
 
   const onClickBack=()=>{
     handlesetStateOfH('Общая таблица')

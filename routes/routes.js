@@ -3,6 +3,7 @@ const Competitor=require('../sequelize/models/competitor')
 const CompetitorFiles=require('../sequelize/models/competitorFiles')
 const upload=require('../middleware/upload')
 const path=require('path')
+const { sequelize } = require('../sequelize/db')
 
 
 const router=express.Router()
@@ -44,6 +45,8 @@ router.post('/upload', upload.single('image'), (req, res) => {
         name: competitorsName,
         created_at: new Date(),
       });
+      await sequelize.query('SET @count = 0');
+      await sequelize.query('UPDATE competitors SET id = @count:=@count+1');
      
       console.log('Запись успешно добавлена');
       return res.status(200).json({ message: 'Запись успешно добавлена' });
@@ -54,14 +57,14 @@ router.post('/upload', upload.single('image'), (req, res) => {
   router.post('/add-competitors-file', async (req, res) => {
     const { imagePath, competitorsId } = req.body;
     try {
-      
       const competitorFile = await CompetitorFiles.create({
         image: imagePath,
         competitors_id: competitorsId, 
         created_at: new Date()
       });
-  
-      res.status(200).json(competitorFile);
+      await sequelize.query('SET @count = 0');
+      await sequelize.query('UPDATE competitors_files SET id = @count:=@count+1');
+      return res.status(200).json({ message: 'Запись успешно добавлена' });
     } catch (error) {
       console.error('Ошибка при добавлении файла конкурента:', error);
       res.status(500).json({ error: 'Ошибка сервера' });
@@ -153,6 +156,12 @@ router.delete('/delete-comptitor/:id',async(req,res)=>{
     await Competitor.destroy(
       {where:{id}}
     )
+    await sequelize.query('SET @count = 0');
+    await sequelize.query('UPDATE competitors SET id = @count:=@count+1');
+    await sequelize.query('SET @count = 0');
+    await sequelize.query('UPDATE competitors_files SET id = @count:=@count+1');
+
+    
     res.status(200).json('Успешно')
   }
   catch (error) {
@@ -167,6 +176,10 @@ router.delete('/delete-comptitor-files/:id',async(req,res)=>{
     await CompetitorFiles.destroy(
       {where:{id}}
     )
+    await sequelize.query('SET @count = 0');
+    await sequelize.query('UPDATE competitors_files SET id = @count:=@count+1');
+    await sequelize.query('SET @count = 0');
+    await sequelize.query('UPDATE competitors SET id = @count:=@count+1');
     res.status(200).json('Успешно')
   }
   catch (error) {
