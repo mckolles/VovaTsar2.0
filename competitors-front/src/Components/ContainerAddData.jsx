@@ -297,7 +297,7 @@ const ContainerAddData=()=>{
       })
       .then((response) => {
         if (response.ok) {
-          setError('Вы вуспешно удалили запись!');
+          setError('Вы успешно удалили запись!');
           fetchTablesData();
           return response.json();
         }
